@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerFallState : EntityState
+public class PlayerFallState : PlayerAirState
 {
     public PlayerFallState(Player player, StateMachine stateMachine, int animationHash) : base(player, stateMachine, animationHash)
     {
@@ -19,5 +19,10 @@ public class PlayerFallState : EntityState
     public override void Update()
     {
         base.Update();
+
+        if (player.isGrounded)
+        {
+            stateMachine.ChangeState(player.idleState);
+        }
     }
 }

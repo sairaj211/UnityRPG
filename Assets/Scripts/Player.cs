@@ -22,6 +22,19 @@ public class Player : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 5f;
     public float jumpForce = 5f;
+    private bool facingRight = true;
+    public int facingDir { get; private set; } = 1;
+    [Range(0f, 1f)]
+    public float inAirMoveMultiplier = 0.5f;
+
+    [Header("Collision Detection")]
+    [SerializeField] private float groundCheckDistance = 0.1f;
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Transform groundCheckPoint;
+    [SerializeField] private Vector2 groundCheckSize = new Vector2(0.5f, 0.1f);
+
+    public bool isGrounded;
+
 
     public Animator animator { get; private set; }
 
@@ -59,23 +72,59 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        HandleCollisionDetection();
         stateMachine.UpdateActiveState();
         DebugManager.Log($"Current State {stateMachine.currentState}");
-
-        Flip();
     }
 
     public void SetVelocity(float xVelocity, float yVelocity)
     {
         rigidBody.linearVelocity = new Vector2(xVelocity, yVelocity);
+        HandleFlip(xVelocity);
     }
 
-    private void Flip()
+    private void HandleFlip(float xVelcoity)
     {
-        // Flip sprite based on movement direction
-        if (moveInput.x != 0)
+        // Only flip if there is horizontal input
+        if (moveInput.x > 0 && !facingRight)
         {
-            spriteRenderer.flipX = moveInput.x < 0;
+            Flip();
+        }
+        else if (moveInput.x < 0 && facingRight)
+        {
+            Flip();
+        }
+    }
+
+    public void Flip()
+    {
+        facingRight = !facingRight;
+        facingDir = facingRight ? 1 : -1;
+        // Rotate the transform to flip the sprite
+        transform.localScale = new Vector3(facingDir, 1, 1);
+    }
+
+    private void HandleCollisionDetection()
+    {
+        isGrounded = Physics2D.BoxCast(
+            groundCheckPoint.position,
+            groundCheckSize,
+            0f,
+            Vector2.down,
+            groundCheckDistance,
+            groundLayer
+        );
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (groundCheckPoint != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireCube(
+                groundCheckPoint.position + Vector3.down * groundCheckDistance,
+                groundCheckSize
+            );
         }
     }
 }
