@@ -24,5 +24,13 @@ public class PlayerFallState : PlayerAirState
         {
             stateMachine.ChangeState(player.idleState);
         }
+
+        // Clamp the fall speed
+        if (rb.linearVelocityY < player.maxFallSpeed)
+        {
+            player.SetVelocity(rb.linearVelocityX, player.maxFallSpeed);
+        }
+
+       // player.HandleVerticalLedgeCorrection();
     }
 }

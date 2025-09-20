@@ -30,7 +30,9 @@ public abstract class EntityState
         }
     }
     
-    public virtual void Update() { }    
+    public virtual void Update() 
+    {
+    }    
     
     public virtual void Exit() 
     { 

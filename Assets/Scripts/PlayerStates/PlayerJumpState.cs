@@ -8,7 +8,7 @@ public class PlayerJumpState : PlayerAirState
     public override void Enter()
     {
         base.Enter();
-
+        player.coyoteTimeCounter = 0f; // Prevent further coyote jumps until grounded again
         player.SetVelocity(rb.linearVelocityX, player.jumpForce);
     }
 
@@ -25,5 +25,7 @@ public class PlayerJumpState : PlayerAirState
         {
             stateMachine.ChangeState(player.fallState); 
         }
+
+        player.HandleVerticalLedgeCorrection();
     }
 }

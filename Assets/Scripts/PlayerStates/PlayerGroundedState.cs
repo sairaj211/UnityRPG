@@ -17,12 +17,12 @@ public class PlayerGroundedState : EntityState
 
     public override void Update()
     {
-        if(rb.linearVelocityY < 0f)
+        if(rb.linearVelocityY < 0f && !player.CanCoyoteJump)
         {
             stateMachine.ChangeState(player.fallState);
         }
 
-        if (playerInput.Player.Jump.WasPerformedThisFrame())
+        if (playerInput.Player.Jump.WasPerformedThisFrame() && player.CanCoyoteJump)
         {
             stateMachine.ChangeState(player.jumpState); 
         }

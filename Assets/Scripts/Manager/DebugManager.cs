@@ -3,7 +3,7 @@ using UnityEngine;
 public static class DebugManager
 {
     // This flag allows you to toggle debug logs in development builds.
-    public static bool IsDebugEnabled { get; set; } = true;
+    public static bool IsDebugEnabled { get; set; } = false;
 
     public static void Log(object message)
     {
